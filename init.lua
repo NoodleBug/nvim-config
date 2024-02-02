@@ -75,8 +75,33 @@ local corePlugins = {
 	'preservim/nerdtree',  -- File explorer
 	'jiangmiao/auto-pairs', -- Auto match brackets
 	'mg979/vim-visual-multi', -- Multiple cursors
-	"sindrets/diffview.nvim", -- Diffview 
-	"metakirby5/codi.vim", -- Codi scratchpad
+	"sindrets/diffview.nvim", -- Diffview
+	{
+		"sveltejs/language-tools", -- Svelte
+		-- config = function()
+		-- 	require('language-tools').setup()
+		-- end,
+	},
+	{
+		"metakirby5/codi.vim",
+		config = function()
+			vim.g.codi = {
+				interpreters = {
+					python = {
+						bin = 'C:\\Users\\NoodleBug\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe'
+						-- prompt: '^\(>>>\|\.\.\.\) ',
+					},
+				}
+			}
+
+			-- let g:codi#interpreters = {
+			--       \ 'python': {
+			--           \ 'bin': 'python',
+			--           \ 'prompt': '^\(>>>\|\.\.\.\) ',
+			--           \ },
+			--       \ }
+		end
+	},
 	'michaeljsmith/vim-indent-object', -- Indent object
 	{
 		'ThePrimeagen/harpoon',
@@ -92,7 +117,7 @@ local corePlugins = {
 	{
 		'jbyuki/instant.nvim',
 		config = function()
-			vim.g.instant_username = 'NoodleBug'
+			vim.g.instant_username = 'noodlebug'
 		end
 	},
 	{
@@ -361,15 +386,15 @@ local corePlugins = {
 				-- don't override the built-in and fugitive keymaps
 				local gs = package.loaded.gitsigns
 				vim.keymap.set({ 'n', 'v' }, ']c', function()
-				if vim.wo.diff then return ']c' end
+					if vim.wo.diff then return ']c' end
 					vim.schedule(function() gs.next_hunk() end)
 					return '<Ignore>'
-					end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+				end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
 				vim.keymap.set({ 'n', 'v' }, '[c', function()
-				if vim.wo.diff then return '[c' end
+					if vim.wo.diff then return '[c' end
 					vim.schedule(function() gs.prev_hunk() end)
 					return '<Ignore>'
-					end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
+				end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
 			end,
 		},
 	},
@@ -877,26 +902,26 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 
 -- Custom commands / mappings
-vim.cmd.autocmd('BufNewFile,BufRead', '*', 'setlocal formatoptions=cr') -- Don't auto insert as a comment when pressing O
-vim.cmd.autocmd('TermOpen', '*', 'setlocal nonumber norelativenumber')  -- No line numbers in terminal
-vim.cmd.command('EditConfig', ":execute 'e ' . stdpath('config')<CR>")  -- Edit config file
-vim.cmd.nnoremap('<leader>F', ':NERDTreeToggle<CR>')                    -- Open nerdtree file explorer
-vim.cmd.nnoremap('<leader>L', ':LazyGit<CR>')                           -- Open lazygit (git gui)
-vim.cmd.nmap('<M-J>', '`o<Esc>``')                                      -- Insert new line below current line
-vim.cmd.nmap('<M-K>', '`O<Esc>``')                                      -- Insert new line above current line
-vim.cmd.tnoremap('<C-h>', '<C-\\><C-n>')                                -- Exit terminal mode with control + h
-vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')	-- Map m + space to add mark to harpoon
-vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>')   -- Map g + `` to toggle harpoon menu')
-vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')           -- Map g + `1 to go to harpoon mark 1
-vim.cmd.nmap('g`2', ':lua require("harpoon.ui").nav_file(2)<CR>')           -- Map g + `2 to go to harpoon mark 2
-vim.cmd.nmap('g`3', ':lua require("harpoon.ui").nav_file(3)<CR>')           -- Map g + `3 to go to harpoon mark 3
-vim.cmd.nmap('g`4', ':lua require("harpoon.ui").nav_file(4)<CR>')           -- Map g + `4 to go to harpoon mark 4
-vim.cmd.nmap('g`5', ':lua require("harpoon.ui").nav_file(5)<CR>')           -- Map g + `5 to go to harpoon mark 5
-vim.cmd.nmap('g`6', ':lua require("harpoon.ui").nav_file(6)<CR>')           -- Map g + `6 to go to harpoon mark 6
-vim.cmd.nmap('g`7', ':lua require("harpoon.ui").nav_file(7)<CR>')           -- Map g + `7 to go to harpoon mark 7
-vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')           -- Map g + `8 to go to harpoon mark 8
-vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')           -- Map g + `9 to go to harpoon mark 9
-vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')          -- Map g + `0 to go to harpoon mark 10
+vim.cmd.autocmd('BufNewFile,BufRead', '*', 'setlocal formatoptions=cr')   -- Don't auto insert as a comment when pressing O
+vim.cmd.autocmd('TermOpen', '*', 'setlocal nonumber norelativenumber')    -- No line numbers in terminal
+vim.cmd.command('EditConfig', ":execute 'e ' . stdpath('config')<CR>")    -- Edit config file
+vim.cmd.nnoremap('<leader>F', ':NERDTreeToggle<CR>')                      -- Open nerdtree file explorer
+vim.cmd.nnoremap('<leader>L', ':LazyGit<CR>')                             -- Open lazygit (git gui)
+vim.cmd.nmap('<M-J>', '`o<Esc>``')                                        -- Insert new line below current line
+vim.cmd.nmap('<M-K>', '`O<Esc>``')                                        -- Insert new line above current line
+vim.cmd.tnoremap('<C-h>', '<C-\\><C-n>')                                  -- Exit terminal mode with control + h
+vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')  -- Map m + space to add mark to harpoon
+vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>') -- Map g + `` to toggle harpoon menu')
+vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')         -- Map g + `1 to go to harpoon mark 1
+vim.cmd.nmap('g`2', ':lua require("harpoon.ui").nav_file(2)<CR>')         -- Map g + `2 to go to harpoon mark 2
+vim.cmd.nmap('g`3', ':lua require("harpoon.ui").nav_file(3)<CR>')         -- Map g + `3 to go to harpoon mark 3
+vim.cmd.nmap('g`4', ':lua require("harpoon.ui").nav_file(4)<CR>')         -- Map g + `4 to go to harpoon mark 4
+vim.cmd.nmap('g`5', ':lua require("harpoon.ui").nav_file(5)<CR>')         -- Map g + `5 to go to harpoon mark 5
+vim.cmd.nmap('g`6', ':lua require("harpoon.ui").nav_file(6)<CR>')         -- Map g + `6 to go to harpoon mark 6
+vim.cmd.nmap('g`7', ':lua require("harpoon.ui").nav_file(7)<CR>')         -- Map g + `7 to go to harpoon mark 7
+vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')         -- Map g + `8 to go to harpoon mark 8
+vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')         -- Map g + `9 to go to harpoon mark 9
+vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')        -- Map g + `0 to go to harpoon mark 10
 -- Customize nightfox theme
 require('nightfox').setup({
 	-- Comment support for jsx / tsx
@@ -922,5 +947,9 @@ for option, value in pairs(powershell_options) do
 end
 -- vim.cmd("highlight Comment guifg=#F9F1A5");
 
--- Break {} into individual lines (Disabled until fixed)
--- vim.cmd.vnoremap('<leader>L', ":'<,'>s/{\\s/{\\r/ | s/\\v,\\s/,\\r/g | s/\\s}/\\r}<CR>")
+vim.g.tmux_navigator_no_mappings = 1
+vim.cmd.noremap('<silent> {Left-Mapping}', ':<C-U>TmuxNavigateLeft<cr>')
+vim.cmd.noremap('<silent> {Down-Mapping}', ':<C-U>TmuxNavigateDown<cr>')
+vim.cmd.noremap('<silent> {Up-Mapping}', ':<C-U>TmuxNavigateUp<cr>')
+vim.cmd.noremap('<silent> {Right-Mapping}', ':<C-U>TmuxNavigateRight<cr>')
+vim.cmd.noremap('<silent> {Previous-Mapping}', ':<C-U>TmuxNavigatePrevious<cr>')
