@@ -82,6 +82,13 @@ require('lazy').setup(vim.tbl_extend('force', {
 	'jiangmiao/auto-pairs', -- Auto match brackets
 	'mg979/vim-visual-multi', -- Multiple cursors
 	{
+		'ThePrimeagen/harpoon',
+		config = function()
+			require('harpoon').setup({})
+			require("telescope").load_extension('harpoon')
+		end
+	},
+	{
 		'jbyuki/instant.nvim',
 		config = function()
 			vim.g.instant_username = 'NoodleBug'
@@ -90,7 +97,7 @@ require('lazy').setup(vim.tbl_extend('force', {
 	{
 		'ggandor/leap.nvim', -- Jump to any line in a file with labels
 		config = function()
-			require('leap').add_default_mappings();
+			require('leap').add_default_mappings()
 		end
 	},
 	{
@@ -697,7 +704,7 @@ local on_attach = function(_, bufnr)
 	nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
 	nmap('gr', function()
 		require('telescope.builtin').lsp_references {
-			path_display = 'truncate',
+			path_display = 'smart',
 			show_line = false,
 		}
 	end, '[G]oto [R]eferences')
@@ -858,14 +865,25 @@ vim.opt.shiftwidth = 4
 
 -- Custom commands / mappings
 vim.cmd.autocmd('BufNewFile,BufRead', '*', 'setlocal formatoptions=cr') -- Don't auto insert as a comment when pressing O
-vim.cmd.autocmd('TermOpen', '*', 'setlocal nonumber norelativenumber'); -- No line numbers in terminal
+vim.cmd.autocmd('TermOpen', '*', 'setlocal nonumber norelativenumber')  -- No line numbers in terminal
 vim.cmd.command('EditConfig', ":execute 'e ' . stdpath('config')<CR>")  -- Edit config file
 vim.cmd.nnoremap('<leader>F', ':NERDTreeToggle<CR>')                    -- Open nerdtree file explorer
 vim.cmd.nnoremap('<leader>L', ':LazyGit<CR>')                           -- Open lazygit (git gui)
 vim.cmd.nmap('<M-J>', '`o<Esc>``')                                      -- Insert new line below current line
 vim.cmd.nmap('<M-K>', '`O<Esc>``')                                      -- Insert new line above current line
 vim.cmd.tnoremap('<C-h>', '<C-\\><C-n>')                                -- Exit terminal mode with control + h
-
+vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')	-- Map m + space to add mark to harpoon
+vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>')   -- Map g + `` to toggle harpoon menu')
+vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')           -- Map g + `1 to go to harpoon mark 1
+vim.cmd.nmap('g`2', ':lua require("harpoon.ui").nav_file(2)<CR>')           -- Map g + `2 to go to harpoon mark 2
+vim.cmd.nmap('g`3', ':lua require("harpoon.ui").nav_file(3)<CR>')           -- Map g + `3 to go to harpoon mark 3
+vim.cmd.nmap('g`4', ':lua require("harpoon.ui").nav_file(4)<CR>')           -- Map g + `4 to go to harpoon mark 4
+vim.cmd.nmap('g`5', ':lua require("harpoon.ui").nav_file(5)<CR>')           -- Map g + `5 to go to harpoon mark 5
+vim.cmd.nmap('g`6', ':lua require("harpoon.ui").nav_file(6)<CR>')           -- Map g + `6 to go to harpoon mark 6
+vim.cmd.nmap('g`7', ':lua require("harpoon.ui").nav_file(7)<CR>')           -- Map g + `7 to go to harpoon mark 7
+vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')           -- Map g + `8 to go to harpoon mark 8
+vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')           -- Map g + `9 to go to harpoon mark 9
+vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')          -- Map g + `0 to go to harpoon mark 10
 -- Customize nightfox theme
 require('nightfox').setup({
 	-- Comment support for jsx / tsx
