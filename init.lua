@@ -67,6 +67,7 @@ local corePlugins = {
 	-- 'github/copilot.vim', -- Copilot
 	{
 		"christoomey/vim-tmux-navigator",
+
 		cmd = {
 			"TmuxNavigateLeft",
 			"TmuxNavigateDown",
@@ -74,13 +75,15 @@ local corePlugins = {
 			"TmuxNavigateRight",
 			"TmuxNavigatePrevious",
 		},
+
 		keys = {
-			{ "<A-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-			{ "<A-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
-			{ "<A-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
-			{ "<A-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
-			{ "<A-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+			-- { "<C-h>", "<cmd>TmuxNavigateLeft<cr>" },
+			{ "<C-h>", "<cmd>help<cr>" },
+			{ "<C-j>", "<cmd>TmuxNavigateDown<cr>" },
+			{ "<C-k>", "<cmd>TmuxNavigateUp<cr>" },
+			{ "<C-l>", "<cmd>TmuxNavigateRight<cr>" },
 		},
+
 	},
 	'rhysd/vim-fixjson',      -- Json Formatter
 	'preservim/nerdtree',     -- File explorer
@@ -933,7 +936,8 @@ for option, value in pairs(powershell_options) do vim.opt[option] = value end
 -- vim.cmd.noremap('<silent> {Up-Mapping}', ':TmuxNavigateUp<cr>')
 -- vim.cmd.noremap('<silent> {Right-Mapping}', ':TmuxNavigateRight<cr>')
 -- vim.cmd.noremap('<silent> {Previous-Mapping}', ':TmuxNavigatePrevious<cr>')
-vim.api.nvim_set_keymap('n', '<A-l>', ':TmuxNavigateRight<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<A-j>', ':TmuxNavigateDown<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<A-h>', ':TmuxNavigateLeft<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<A-k>', ':TmuxNavigateUp<CR>', { noremap = true, silent = true })
+
+-- vim.api.nvim_set_keymap('n', '<A-l>', ':TmuxNavigateRight<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<A-j>', ':TmuxNavigateDown<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<A-h>', ':TmuxNavigateLeft<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<A-k>', ':TmuxNavigateUp<CR>', { noremap = true, silent = true })
