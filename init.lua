@@ -75,6 +75,9 @@ local corePlugins = {
 	'preservim/nerdtree',  -- File explorer
 	'jiangmiao/auto-pairs', -- Auto match brackets
 	'mg979/vim-visual-multi', -- Multiple cursors
+	"sindrets/diffview.nvim", -- Diffview 
+	"metakirby5/codi.vim", -- Codi scratchpad
+	'michaeljsmith/vim-indent-object', -- Indent object
 	{
 		'ThePrimeagen/harpoon',
 		config = function()
@@ -358,15 +361,15 @@ local corePlugins = {
 				-- don't override the built-in and fugitive keymaps
 				local gs = package.loaded.gitsigns
 				vim.keymap.set({ 'n', 'v' }, ']c', function()
-					if vim.wo.diff then return ']c' end
+				if vim.wo.diff then return ']c' end
 					vim.schedule(function() gs.next_hunk() end)
 					return '<Ignore>'
-				end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+					end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
 				vim.keymap.set({ 'n', 'v' }, '[c', function()
-					if vim.wo.diff then return '[c' end
+				if vim.wo.diff then return '[c' end
 					vim.schedule(function() gs.prev_hunk() end)
 					return '<Ignore>'
-				end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
+					end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
 			end,
 		},
 	},
