@@ -91,39 +91,71 @@ local corePlugins = {
 	'mg979/vim-visual-multi', -- Multiple cursors
 	"sindrets/diffview.nvim", -- Diffview
 	{
-		"mfussenegger/nvim-dap",
-		config = function()
-			-- require("dapui").toggle_breakpoint() on <leader>cb
-			vim.cmd.nmap('<leader>cb', '<cmd>lua require"dap".toggle_breakpoint()<CR>')
-
-			-- require("dapui").step_into() on F10
-			vim.cmd.nmap('<F10>', '<cmd>lua require"dap".step_into()<CR>')
-
-			-- require("dapui").step_over() on F11
-			vim.cmd.nmap('<F11>', '<cmd>lua require"dap".step_over()<CR>')
-
-			-- require("dapui").continue() on F5
-			vim.cmd.nmap('<F5>', '<cmd>lua require"dap".continue()<CR>')
-
-			-- require("dapui").repl.toggle() on <leader>ci
-			vim.cmd.nmap('<leader>ci', '<cmd>lua require"dap".repl.toggle()<CR>')
-
-			local dap = require('dap')
-			dap.configurations.javascript = {
-				{
-					name = 'Launch NodeJS',
-					type = 'node',
-					request = 'launch',
-					program = '${file}',
-					cwd = vim.fn.getcwd(),
-					sourceMaps = true,
-					protocol = 'inspector',
-					console = 'integratedTerminal'
-				}
-			}
-
-		end
+		'puremourning/vimspector',
 	},
+	-- {
+	-- 	"rcarriga/nvim-dap-ui",
+	-- 	dependencies = { "mfussenegger/nvim-dap" },
+	--
+	-- 	config = function()
+	-- 		-- require("dapui").toggle_breakpoint() on <leader>cb
+	-- 		vim.cmd.nmap('<leader>cb', '<cmd>lua require"dap".toggle_breakpoint()<CR>')
+	--
+	-- 		-- require("dapui").step_into() on F10
+	-- 		vim.cmd.nmap('<F10>', '<cmd>lua require"dap".step_into()<CR>')
+	--
+	-- 		-- require("dapui").step_over() on F11
+	-- 		vim.cmd.nmap('<F11>', '<cmd>lua require"dap".step_over()<CR>')
+	--
+	-- 		-- require("dapui").continue() on F5
+	-- 		vim.cmd.nmap('<F5>', '<cmd>lua require"dap".continue()<CR>')
+	--
+	-- 		-- require("dapui").repl.toggle() on <leader>ci
+	-- 		vim.cmd.nmap('<leader>ci', '<cmd>lua require"dap".repl.toggle()<CR>')
+	--
+	-- 		local dap, dapui = require('dap'), require('dapui')
+	--
+	-- 		-- javascript configuration
+	-- 		dap.configurations.javascript = {
+	-- 			{
+	-- 				name = 'Launch NodeJS',
+	-- 				type = 'node',
+	-- 				request = 'launch',
+	-- 				program = '${file}',
+	-- 				cwd = vim.fn.getcwd(),
+	-- 				sourceMaps = true,
+	-- 				protocol = 'inspector',
+	-- 				console = 'integratedTerminal'
+	-- 			}
+	-- 		}
+	-- 		
+	-- 		-- c# configuration (attach to process)
+	-- 		dap.adapters.coreclr = {
+	-- 			type = "executable",
+	-- 			command = vim.fn.stdpath('data') .. "/mason/bin/netcoredbg.cmd",
+	-- 			args = { "--interpreter=vscode", "--server" },
+	-- 		}
+	-- 		dap.configurations.cs = {
+	-- 			{
+	-- 				name = "Launch",
+	-- 				type = "coreclr",
+	-- 				request = "launch",
+	-- 				program = function()
+	-- 					return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+	-- 				end,
+	-- 			},
+	-- 			-- {
+	-- 			-- 	name = "Attach to process",
+	-- 			-- 	type = "coreclr",
+	-- 			-- 	request = "attach",
+	-- 			-- 	-- processId = "${command:pickProcess}"
+	-- 			-- 	-- processId = require('dap.utils').pick_process
+	-- 			-- 	processId = pick_process
+	-- 			-- }
+	-- 		}
+	-- 		dapui.setup()
+	-- 	end
+	-- },
 	-- {
 	--     "Himujjal/tree-sitter-svelte",
 	--     branch = "noodlechange", -- specify the branch here
@@ -928,6 +960,10 @@ local powershell_options = {
 	shellxquote = ""
 }
 for option, value in pairs(powershell_options) do vim.opt[option] = value end
+
+-- vim.g.python3_host_prog = 'C:\\Users\\adysart\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+-- vim.g.python_host_prog = 'C:\\Users\\adysart\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+
 -- vim.cmd("highlight Comment guifg=#F9F1A5");
 
 -- vim.g.tmux_navigator_no_mappings = 1
