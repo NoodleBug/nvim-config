@@ -65,28 +65,22 @@ local corePlugins = {
 
 	-- MINE
 	-- 'github/copilot.vim', -- Copilot
-	{
-		"christoomey/vim-tmux-navigator",
-		cmd = {
-			"TmuxNavigateLeft",
-			"TmuxNavigateDown",
-			"TmuxNavigateUp",
-			"TmuxNavigateRight",
-			"TmuxNavigatePrevious",
-		},
-		keys = {
-			{ "<A-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-			{ "<A-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
-			{ "<A-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
-			{ "<A-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
-			{ "<A-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-		},
-	},
 	'rhysd/vim-fixjson',      -- Json Formatter
 	'preservim/nerdtree',     -- File explorer
 	'jiangmiao/auto-pairs',   -- Auto match brackets
 	'mg979/vim-visual-multi', -- Multiple cursors
 	"sindrets/diffview.nvim", -- Diffview
+	{
+		"nathom/tmux.nvim",
+		-- config = [[require("config.tmux")]]
+		config = function ()
+			local map = vim.api.nvim_set_keymap
+			map("n", "<A-h>", [[<cmd>lua require('tmux').move_left()<cr>]], {})
+			map("n", "<A-j>", [[<cmd>lua require('tmux').move_down()<cr>]], {})
+			map("n", "<A-k>", [[<cmd>lua require('tmux').move_up()<cr>]], {})
+			map("n", "<A-l>", [[<cmd>lua require('tmux').move_right()<cr>]], {})
+		end
+	},
 	{
 		"mfussenegger/nvim-dap",
 		config = function()
@@ -916,7 +910,8 @@ require('nightfox').setup({
 
 -- Fix powershell encoding (for LazyGit)
 local powershell_options = {
-	shell = vim.fn.executable "pwsh" == 1 and "pwsh" or "powershell",
+	-- shell = vim.fn.executable "pwsh" == 1 and "pwsh" or "powershell",
+	shell = vim.fn.executable "pwsh" == 1 and "pwsh" or "powershell.exe",
 	shellcmdflag =
 	"-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
 	shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
@@ -933,7 +928,8 @@ for option, value in pairs(powershell_options) do vim.opt[option] = value end
 -- vim.cmd.noremap('<silent> {Up-Mapping}', ':TmuxNavigateUp<cr>')
 -- vim.cmd.noremap('<silent> {Right-Mapping}', ':TmuxNavigateRight<cr>')
 -- vim.cmd.noremap('<silent> {Previous-Mapping}', ':TmuxNavigatePrevious<cr>')
-vim.api.nvim_set_keymap('n', '<A-l>', ':TmuxNavigateRight<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<A-j>', ':TmuxNavigateDown<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<A-h>', ':TmuxNavigateLeft<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<A-k>', ':TmuxNavigateUp<CR>', { noremap = true, silent = true })
+
+-- vim.api.nvim_set_keymap('n', '<A-l>', ':TmuxNavigateRight<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<A-j>', ':TmuxNavigateDown<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<A-h>', ':TmuxNavigateLeft<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<A-k>', ':TmuxNavigateUp<CR>', { noremap = true, silent = true })
