@@ -66,13 +66,7 @@ if status then
 end
 
 
-
--- NOTE: Here is where you install your plugins.
---  You can configure plugins using the `config` key.
---
---  You can also configure plugins after the setup call,
---    as they will be available in your neovim runtime.
-require('lazy').setup(vim.tbl_extend('force', {
+local corePlugins = {
 	-- NOTE: First, some plugins that don't require any configuration
 
 	-- MINE
@@ -84,7 +78,11 @@ require('lazy').setup(vim.tbl_extend('force', {
 	{
 		'ThePrimeagen/harpoon',
 		config = function()
-			require('harpoon').setup({})
+			require('harpoon').setup({
+				menu = {
+					width = vim.api.nvim_win_get_width(0) - 16,
+				}
+			})
 			require("telescope").load_extension('harpoon')
 		end
 	},
@@ -236,7 +234,7 @@ require('lazy').setup(vim.tbl_extend('force', {
 		config = function()
 			vim.cmd("colorscheme nightfox")
 		end
-	}, -- Theme{
+	}, -- Theme
 	{
 		'goolord/alpha-nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -474,7 +472,19 @@ require('lazy').setup(vim.tbl_extend('force', {
 	--
 	--    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
 	-- { import = 'custom.plugins' },
-}, work_plugins), {})
+}
+
+-- Loop through work plugins and append to core plugins
+for _, plugin in pairs(work_plugins) do
+	table.insert(corePlugins, plugin)
+end
+
+-- NOTE: Here is where you install your plugins.
+--  You can configure plugins using the `config` key.
+--
+--  You can also configure plugins after the setup call,
+--    as they will be available in your neovim runtime.
+require('lazy').setup(corePlugins)
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
