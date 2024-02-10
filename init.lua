@@ -209,10 +209,19 @@ local corePlugins = {
 	{
 		"metakirby5/codi.vim",
 		config = function()
+			-- use which to find the path to the python interpreter
+			local which = vim.fn.system('which python')
+
+			-- if which is empty, try windows where.exe
+			if which == '' then
+				which = vim.fn.system('where.exe python')
+			end
+
 			vim.g.codi = {
 				interpreters = {
 					python = {
-						bin = 'C:\\Users\\NoodleBug\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe'
+						-- bin = 'C:\\Users\\NoodleBug\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe'
+						bin = which,
 						-- prompt: '^\(>>>\|\.\.\.\) ',
 					}
 				}
