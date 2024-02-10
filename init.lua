@@ -991,7 +991,10 @@ local powershell_options = {
 	shellquote = "",
 	shellxquote = ""
 }
-for option, value in pairs(powershell_options) do vim.opt[option] = value end
+-- Only set the options if the shell is powershell
+if vim.fn.executable "pwsh" == 1 or vim.fn.executable "powershell.exe" == 1 then
+	for option, value in pairs(powershell_options) do vim.opt[option] = value end
+end
 
 -- vim.g.python3_host_prog = 'C:\\Users\\adysart\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
 -- vim.g.python_host_prog = 'C:\\Users\\adysart\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
