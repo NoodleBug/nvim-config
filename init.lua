@@ -37,7 +37,7 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
-     -- Set <space> as the leader key
+-- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
@@ -65,15 +65,15 @@ local corePlugins = {
 
 	-- MINE
 	-- 'github/copilot.vim', -- Copilot
-	'rhysd/vim-fixjson',      -- Json Formatter
-	'preservim/nerdtree',     -- File explorer
-	'jiangmiao/auto-pairs',   -- Auto match brackets
+	'rhysd/vim-fixjson',   -- Json Formatter
+	'preservim/nerdtree',  -- File explorer
+	'jiangmiao/auto-pairs', -- Auto match brackets
 	'mg979/vim-visual-multi', -- Multiple cursors
 	"sindrets/diffview.nvim", -- Diffview
 	{
 		"nathom/tmux.nvim",
 		-- config = [[require("config.tmux")]]
-		config = function ()
+		config = function()
 			local map = vim.api.nvim_set_keymap
 			map("n", "<A-h>", [[<cmd>lua require('tmux').move_left()<cr>]], {})
 			map("n", "<A-j>", [[<cmd>lua require('tmux').move_down()<cr>]], {})
@@ -112,7 +112,6 @@ local corePlugins = {
 					console = 'integratedTerminal'
 				}
 			}
-
 		end
 	},
 	-- {
@@ -243,114 +242,132 @@ local corePlugins = {
 			})
 			require("telescope").load_extension('harpoon')
 		end
-	}, {
-	'jbyuki/instant.nvim',
-	config = function() vim.g.instant_username = 'noodlebug' end
-}, {
-	'ggandor/leap.nvim',     -- Jump to any line in a file with labels
-	config = function() require('leap').add_default_mappings() end
-}, {
-	'simrat39/symbols-outline.nvim',     -- Outline symbols
-	config = function() require('symbols-outline').setup({}) end
-}, {
-	"amitds1997/remote-nvim.nvim",
-	version = "*",     -- This keeps it pinned to semantic releases
-	dependencies = {
-		"nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim",
-		"rcarriga/nvim-notify",
-		-- This would be an optional dependency eventually
-		"nvim-telescope/telescope.nvim"
 	},
-	config = true                    -- This calls the default setup(); make sure to call it
-}, {
-	'chipsenkbeil/distant.nvim',     -- Remote editing
-	branch = 'v0.3',
-	config = function() require('distant'):setup() end
-}, {
-	'akinsho/toggleterm.nvim',     -- Terminal in a floating window
-	version = "*",
-	opts = {
-		-- direction = 'float',
-		-- open_mapping = '<C-\\>',
-		-- shell = 'powershell.exe'
+	{
+		'jbyuki/instant.nvim',
+		config = function() vim.g.instant_username = 'noodlebug' end
 	},
-	config = function()
-		require('toggleterm').setup {
-			open_mapping = [[<C-\>]],
-			shell = 'powershell.exe',
-			direction = 'vertical',
-			size = 100
-		}
-		vim.cmd.nnoremap('<M-\\>', ':ToggleTerm direction=float<CR>')
-		vim.cmd.nnoremap('|', ':ToggleTerm direction=horizontal<CR>')
-	end
-}, {
-	'kdheepak/lazygit.nvim',                                   -- Lazygit in a floating window
-	config = function()
-		vim.g.lazygit_floating_window_winblend = 0             -- transparency of floating window
-		vim.g.lazygit_floating_window_scaling_factor = 0.9     -- scaling factor for floating window
-		vim.g.lazygit_floating_window_border_chars = {
-			'╭', '─', '╮', '│', '╯', '─', '╰', '│'
-		}                                                 -- customize lazygit popup window border characters
-		vim.g.lazygit_floating_window_use_plenary = 0     -- use plenary.nvim to manage floating window if available
-		vim.g.lazygit_use_neovim_remote = 1               -- fallback to 0 if neovim-remote is not installed
+	{
+		'ggandor/leap.nvim', -- Jump to any line in a file with labels
+		config = function() require('leap').add_default_mappings() end
+	},
+	{
+		'simrat39/symbols-outline.nvim', -- Outline symbols
+		config = function() require('symbols-outline').setup({}) end
+	},
+	{
+		"amitds1997/remote-nvim.nvim",
+		version = "*", -- This keeps it pinned to semantic releases
+		dependencies = {
+			"nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim",
+			"rcarriga/nvim-notify",
+			-- This would be an optional dependency eventually
+			"nvim-telescope/telescope.nvim"
+		},
+		config = true -- This calls the default setup(); make sure to call it
+	},
+	{
+		'chipsenkbeil/distant.nvim', -- Remote editing
+		branch = 'v0.3',
+		config = function() require('distant'):setup() end
+	},
+	{
+		'akinsho/toggleterm.nvim', -- Terminal in a floating window
+		version = "*",
+		opts = {
+			-- direction = 'float',
+			-- open_mapping = '<C-\\>',
+			-- shell = 'powershell.exe'
+		},
+		config = function()
+			require('toggleterm').setup {
+				open_mapping = [[<C-\>]],
+				-- shell = 'powershell.exe',
+				direction = 'vertical',
+				size = 100
+			}
+			vim.cmd.nnoremap('<M-\\>', ':ToggleTerm direction=float<CR>')
+			vim.cmd.nnoremap('|', ':ToggleTerm direction=horizontal<CR>')
+		end
+	},
+	{
+		'kdheepak/lazygit.nvim',                     -- Lazygit in a floating window
+		config = function()
+			vim.g.lazygit_floating_window_winblend = 0 -- transparency of floating window
+			vim.g.lazygit_floating_window_scaling_factor = 0.9 -- scaling factor for floating window
+			vim.g.lazygit_floating_window_border_chars = {
+				'╭', '─', '╮', '│', '╯', '─', '╰', '│'
+			}                                   -- customize lazygit popup window border characters
+			vim.g.lazygit_floating_window_use_plenary = 0 -- use plenary.nvim to manage floating window if available
+			vim.g.lazygit_use_neovim_remote = 1 -- fallback to 0 if neovim-remote is not installed
 
-		vim.g.lazygit_use_custom_config_file_path = 0     -- config file path is evaluated if this value is 1
-		vim.g.lazygit_config_file_path = ''               -- custom config file path
-		-- OR
-		-- vim.g.lazygit_config_file_path = {} -- table of custom config file paths
-	end,
-	dependencies = { 'nvim-lua/plenary.nvim' }
-}, {
-	"github/copilot.vim",     -- Copilot but better
-	cmd = "Copilot",
-	event = "InsertEnter",
-	config = function()
-		-- require("copilot").setup({
-		-- 	suggestion = {
-		-- 		enable = true,
-		-- 		auto_trigger = true,
-		-- 	},
-		-- })
-		-- When pressing Ctrl + C, dismiss suggestion
-		vim.cmd.inoremap("<C-c>", "<esc>")
-	end
-}, {
-	"kylechui/nvim-surround",     -- Modify surrounders ({""})
-	version = "*",                -- Use for stability; omit to use `main` branch for the latest features
-	event = "VeryLazy",
-	config = function()
-		require("nvim-surround").setup({
-			-- Configuration here, or leave empty to use defaults
-		})
-	end
-}, {
-	'stevearc/oil.nvim',
-	dependencies = { 'nvim-tree/nvim-web-devicons' },
-	opts = {},
-	config = function()
-		local oil = require('oil')
-		oil.setup({
-			view_options = { show_hidden = true },
-			float = { padding = 10 }
-		})
-		require('nvim-web-devicons').setup({})
-		vim.keymap.set("n", "\\", oil.open_float,
-			{ desc = "Open parent directory in oil" })
-	end
-}, {
-	'Wansmer/treesj',
-	keys = { { '<space>m', '<CMD>TSJToggle<CR>', 'Toggle Treesitter Join' } },
-	cmd = { 'TSJToggle', 'TSJSplit', 'TSJJoin' },
-	opts = { use_default_keymaps = false },
-	dependencies = { 'nvim-treesitter/nvim-treesitter' },
-	config = function()
-		require('treesj').setup({ --[[ your config ]] })
-	end
-}, {
-	'EdenEast/nightfox.nvim',
-	config = function() vim.cmd("colorscheme nightfox") end
-},     -- Theme
+			vim.g.lazygit_use_custom_config_file_path = 0 -- config file path is evaluated if this value is 1
+			vim.g.lazygit_config_file_path = '' -- custom config file path
+			-- OR
+			-- vim.g.lazygit_config_file_path = {} -- table of custom config file paths
+		end,
+		dependencies = { 'nvim-lua/plenary.nvim' }
+	},
+	{
+		"github/copilot.vim", -- Copilot but better
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			-- require("copilot").setup({
+			-- 	suggestion = {
+			-- 		enable = true,
+			-- 		auto_trigger = true,
+			-- 	},
+			-- })
+			-- When pressing Ctrl + C, dismiss suggestion
+			vim.cmd.inoremap("<C-c>", "<esc>")
+		end
+	},
+	{
+		"kylechui/nvim-surround", -- Modify surrounders ({""})
+		version = "*",     -- Use for stability; omit to use `main` branch for the latest features
+		event = "VeryLazy",
+		config = function()
+			require("nvim-surround").setup({
+				-- Configuration here, or leave empty to use defaults
+			})
+		end
+	},
+	{
+		'stevearc/oil.nvim',
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		opts = {},
+		config = function()
+			local oil = require('oil')
+			oil.setup({
+				view_options = { show_hidden = true },
+				float = { padding = 10 }
+			})
+			require('nvim-web-devicons').setup({})
+			vim.keymap.set("n", "\\", oil.open_float,
+				{ desc = "Open parent directory in oil" })
+		end
+	},
+	{
+		'Wansmer/treesj',
+		keys = { { '<space>m', '<CMD>TSJToggle<CR>', 'Toggle Treesitter Join' } },
+		cmd = { 'TSJToggle', 'TSJSplit', 'TSJJoin' },
+		opts = { use_default_keymaps = false },
+		dependencies = { 'nvim-treesitter/nvim-treesitter' },
+		config = function()
+			require('treesj').setup({ --[[ your config ]] })
+		end
+	},
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		config = function() vim.cmd("colorscheme catppuccin") end
+	},
+	-- {
+	-- 	'EdenEast/nightfox.nvim',
+	-- 	config = function() vim.cmd("colorscheme nightfox") end
+	-- }, -- Theme
 	{
 		'goolord/alpha-nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -415,70 +432,73 @@ local corePlugins = {
 			'nvim-lua/plenary.nvim', 'stevearc/dressing.nvim' -- optional for vim.ui.select
 		},
 		config = true
-	}, {
-	-- LSP Configuration & Plugins
-	'neovim/nvim-lspconfig',
-	dependencies = {
-		-- Automatically install LSPs to stdpath for neovim
-		{ 'williamboman/mason.nvim', config = true },
-		'williamboman/mason-lspconfig.nvim',
+	},
+	{
+		-- LSP Configuration & Plugins
+		'neovim/nvim-lspconfig',
+		dependencies = {
+			-- Automatically install LSPs to stdpath for neovim
+			{ 'williamboman/mason.nvim', config = true },
+			'williamboman/mason-lspconfig.nvim',
 
-		-- Useful status updates for LSP
-		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-		{ 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
+			-- Useful status updates for LSP
+			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+			{ 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
-		-- Additional lua configuration, makes nvim stuff amazing!
-		'folke/neodev.nvim'
-	}
-}, {
-	-- Autocompletion
-	'hrsh7th/nvim-cmp',
-	dependencies = {
-		-- Snippet Engine & its associated nvim-cmp source
-		'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip',
+			-- Additional lua configuration, makes nvim stuff amazing!
+			'folke/neodev.nvim'
+		}
+	},
+	{
+		-- Autocompletion
+		'hrsh7th/nvim-cmp',
+		dependencies = {
+			-- Snippet Engine & its associated nvim-cmp source
+			'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip',
 
-		-- Adds LSP completion capabilities
-		'hrsh7th/cmp-nvim-lsp',             -- Adds a number of user-friendly snippets
-		'rafamadriz/friendly-snippets',     -- Adds function signature help
-		'hrsh7th/cmp-nvim-lsp-signature-help'
-	}
-},     -- Useful plugin to show you pending keybinds.
-	{ 'folke/which-key.nvim', opts = {} }, {
-	-- Adds git related signs to the gutter, as well as utilities for managing changes
-	'lewis6991/gitsigns.nvim',
-	opts = {
-		-- See `:help gitsigns.txt`
-		signs = {
-			add = { text = '+' },
-			change = { text = '~' },
-			delete = { text = '_' },
-			topdelete = { text = '‾' },
-			changedelete = { text = '~' }
-		},
-		on_attach = function(bufnr)
-			vim.keymap.set('n', '<leader>hp',
-				require('gitsigns').preview_hunk,
-				{ buffer = bufnr, desc = 'Preview git hunk' })
+			-- Adds LSP completion capabilities
+			'hrsh7th/cmp-nvim-lsp', -- Adds a number of user-friendly snippets
+			'rafamadriz/friendly-snippets', -- Adds function signature help
+			'hrsh7th/cmp-nvim-lsp-signature-help'
+		}
+	}, -- Useful plugin to show you pending keybinds.
+	{ 'folke/which-key.nvim', opts = {} },
+	{
+		-- Adds git related signs to the gutter, as well as utilities for managing changes
+		'lewis6991/gitsigns.nvim',
+		opts = {
+			-- See `:help gitsigns.txt`
+			signs = {
+				add = { text = '+' },
+				change = { text = '~' },
+				delete = { text = '_' },
+				topdelete = { text = '‾' },
+				changedelete = { text = '~' }
+			},
+			on_attach = function(bufnr)
+				vim.keymap.set('n', '<leader>hp',
+					require('gitsigns').preview_hunk,
+					{ buffer = bufnr, desc = 'Preview git hunk' })
 
-			-- don't override the built-in and fugitive keymaps
-			local gs = package.loaded.gitsigns
-			vim.keymap.set({ 'n', 'v' }, ']c', function()
-				if vim.wo.diff then return ']c' end
-				vim.schedule(function() gs.next_hunk() end)
-				return '<Ignore>'
-			end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
-			vim.keymap.set({ 'n', 'v' }, '[c', function()
-				if vim.wo.diff then return '[c' end
-				vim.schedule(function() gs.prev_hunk() end)
-				return '<Ignore>'
-			end, {
-				expr = true,
-				buffer = bufnr,
-				desc = "Jump to previous hunk"
-			})
-		end
-	}
-},     -- {
+				-- don't override the built-in and fugitive keymaps
+				local gs = package.loaded.gitsigns
+				vim.keymap.set({ 'n', 'v' }, ']c', function()
+					if vim.wo.diff then return ']c' end
+					vim.schedule(function() gs.next_hunk() end)
+					return '<Ignore>'
+				end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+				vim.keymap.set({ 'n', 'v' }, '[c', function()
+					if vim.wo.diff then return '[c' end
+					vim.schedule(function() gs.prev_hunk() end)
+					return '<Ignore>'
+				end, {
+					expr = true,
+					buffer = bufnr,
+					desc = "Jump to previous hunk"
+				})
+			end
+		}
+	}, -- {
 	--  -- Theme inspired by Atom
 	--  'navarasu/onedark.nvim',
 	--  priority = 1000,
@@ -498,14 +518,15 @@ local corePlugins = {
 				section_separators = ''
 			}
 		}
-	}, {
-	-- Add indentation guides even on blank lines
-	'lukas-reineke/indent-blankline.nvim',
-	-- Enable `lukas-reineke/indent-blankline.nvim`
-	-- See `:help indent_blankline.txt`
-	main = "ibl",
-	opts = {}
-},     -- "gc" to comment visual regions/lines
+	},
+	{
+		-- Add indentation guides even on blank lines
+		'lukas-reineke/indent-blankline.nvim',
+		-- Enable `lukas-reineke/indent-blankline.nvim`
+		-- See `:help indent_blankline.txt`
+		main = "ibl",
+		opts = {}
+	}, -- "gc" to comment visual regions/lines
 	{
 		'numToStr/Comment.nvim',
 		opts = {},
@@ -538,16 +559,17 @@ local corePlugins = {
 				end
 			}
 		}
-	}, {
-	-- Highlight, edit, and navigate code
-	'nvim-treesitter/nvim-treesitter',
-	dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
-	build = ':TSUpdate',
-	commit = '33eb472b459f1d2bf49e16154726743ab3ca1c6d',
-	config = function() end
-	-- Locking this to this commit to keep Flutter / Dart from lagging until this issue is fixed:
-	-- https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
-}
+	},
+	{
+		-- Highlight, edit, and navigate code
+		'nvim-treesitter/nvim-treesitter',
+		dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+		build = ':TSUpdate',
+		commit = '33eb472b459f1d2bf49e16154726743ab3ca1c6d',
+		config = function() end
+		-- Locking this to this commit to keep Flutter / Dart from lagging until this issue is fixed:
+		-- https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
+	}
 
 	-- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
 	--       These are some example plugins that I've included in the kickstart repository.
@@ -924,7 +946,8 @@ cmp.setup {
 		end, { 'i', 's' })
 	},
 	sources = {
-		{ name = 'nvim_lsp' }, { name = 'luasnip' }, { name = 'copilot' },
+		{ name = 'nvim_lsp' },
+		{ name = 'luasnip' }, { name = 'copilot' },
 		{ name = 'nvim_lsp_signature_help' }
 	}
 }
@@ -971,14 +994,14 @@ vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')         -- Map
 vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')         -- Map g + `9 to go to harpoon mark 9
 vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')        -- Map g + `0 to go to harpoon mark 10
 -- Customize nightfox theme
-require('nightfox').setup({
-	-- Comment support for jsx / tsx
-	-- palettes = {
-	-- 	nightfox = {
-	-- 		comment = "#F9F1A5", -- bright yellow
-	-- 	},
-	-- },
-})
+-- require('nightfox').setup({
+-- 	-- Comment support for jsx / tsx
+-- 	-- palettes = {
+-- 	-- 	nightfox = {
+-- 	-- 		comment = "#F9F1A5", -- bright yellow
+-- 	-- 	},
+-- 	-- },
+-- })
 
 -- Fix powershell encoding (for LazyGit)
 local powershell_options = {
@@ -1012,3 +1035,33 @@ end
 -- vim.api.nvim_set_keymap('n', '<A-j>', ':TmuxNavigateDown<CR>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '<A-h>', ':TmuxNavigateLeft<CR>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '<A-k>', ':TmuxNavigateUp<CR>', { noremap = true, silent = true })
+
+-- Force transparent background
+-- vim.cmd('highlight Normal guibg=none')
+-- vim.cmd('highlight Normal ctermbg=none')
+-- vim.cmd('highlight NonText guibg=none')
+-- vim.cmd('highlight NonText ctermbg=none')
+
+-- -- Force transparent background
+-- vim.cmd([[
+--   highlight Normal guibg=none
+--   highlight NormalNC guibg=none
+--   highlight NonText guibg=none
+--   highlight VertSplit guibg=none
+--   highlight StatusLine guibg=none
+--   highlight StatusLineNC guibg=none
+--   highlight NormalFloat guibg=none
+-- ]])
+
+-- Force transparent background only if we're in linux
+if vim.fn.has('unix') == 1 then
+	vim.cmd([[
+	   highlight Normal guibg=none
+	   highlight NormalNC guibg=none
+	   highlight NonText guibg=none
+	   highlight VertSplit guibg=none
+	   highlight StatusLine guibg=none
+	   highlight StatusLineNC guibg=none
+	   highlight NormalFloat guibg=none
+   ]])
+end
