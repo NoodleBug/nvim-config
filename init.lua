@@ -69,6 +69,18 @@ local corePlugins = {
 	'preservim/nerdtree',  -- File explorer
 	'jiangmiao/auto-pairs', -- Auto match brackets
 	'mg979/vim-visual-multi', -- Multiple cursors
+	{
+		'axkirillov/telescope-changed-files', -- Telescope git working files
+		config = function()
+			require('telescope').load_extension('changed_files')
+		end
+	}, 
+	{
+		"olrtg/nvim-emmet",
+		config = function()
+			vim.keymap.set({ "n", "v" }, '<leader>xe', require('nvim-emmet').wrap_with_abbreviation)
+		end,
+	},
 	"sindrets/diffview.nvim", -- Diffview
 	{
 		"nathom/tmux.nvim",
