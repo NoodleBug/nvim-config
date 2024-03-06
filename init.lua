@@ -87,9 +87,29 @@ local corePlugins = {
 			}
 		end,
 	},
+	{
+		"ellisonleao/carbon-now.nvim",
+		lazy = true,
+		cmd = "CarbonNow",
+		config = function()
+			require("carbon-now").setup({ 
+				options = {
+					title = "",
+					titlebar = "",
+					theme = "seti",
+					bg = "none",
+					line_numbers = false,
+					font_size = "12px",
+					drop_shadow = true,
+					drop_shadow_blur = "20px",
+					drop_shadow_offset_y = "0px",
+				}
+			})
+		end,
+	},
 	'rhysd/vim-fixjson',   -- Json Formatter
 	'preservim/nerdtree',  -- File explorer
-	'jiangmiao/auto-pairs', -- Auto match brackets
+	-- 'jiangmiao/auto-pairs', -- Auto match brackets
 	'mg979/vim-visual-multi', -- Multiple cursors
 	{
 		'2kabhishek/nerdy.nvim',
@@ -278,6 +298,7 @@ local corePlugins = {
 	}, 'michaeljsmith/vim-indent-object', -- Indent object
 	{
 		'ThePrimeagen/harpoon',
+		branch = 'harpoon2',
 		config = function()
 			require('harpoon').setup({
 				menu = { width = vim.api.nvim_win_get_width(0) - 16 }
