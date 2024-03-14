@@ -314,7 +314,7 @@ local corePlugins = {
 	}, 'michaeljsmith/vim-indent-object', -- Indent object
 	{
 		'ThePrimeagen/harpoon',
-		branch = 'harpoon2',
+		-- branch = 'harpoon2',
 		config = function()
 			require('harpoon').setup({
 				menu = { width = vim.api.nvim_win_get_width(0) - 16 }
@@ -562,18 +562,18 @@ local corePlugins = {
 				-- don't override the built-in and fugitive keymaps
 				local gs = package.loaded.gitsigns
 				vim.keymap.set({ 'n', 'v' }, ']c', function()
-					if vim.wo.diff then return ']c' end
+				if vim.wo.diff then return ']c' end
 					vim.schedule(function() gs.next_hunk() end)
 					return '<Ignore>'
-				end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+					end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
 				vim.keymap.set({ 'n', 'v' }, '[c', function()
-					if vim.wo.diff then return '[c' end
+				if vim.wo.diff then return '[c' end
 					vim.schedule(function() gs.prev_hunk() end)
 					return '<Ignore>'
-				end, {
-					expr = true,
-					buffer = bufnr,
-					desc = "Jump to previous hunk"
+					end, {
+						expr = true,
+						buffer = bufnr,
+						desc = "Jump to previous hunk"
 				})
 			end
 		}
@@ -795,14 +795,15 @@ vim.defer_fn(function()
 	require('nvim-treesitter.configs').setup {
 		-- Add languages to be installed here that you want installed for treesitter
 
-		--  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
-		ensure_installed = {
-			'glimmer', 'javascript', 'lua', 'python', 'rust', 'tsx',
-			'typescript', 'vim', 'vimdoc'
-		},
+		-- --  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+		-- ensure_installed = {
+		-- 	'glimmer', 'javascript', 'lua', 'python', 'rust', 'tsx',
+		-- 	'typescript', 'vim', 'vimdoc'
+		-- },
 
 		-- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-		auto_install = false,
+		-- auto_install = false,
+		auto_install = true,
 
 		-- Comment support for jsx / tsx
 		-- context_commentstring = {
