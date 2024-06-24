@@ -65,28 +65,30 @@ local corePlugins = {
 
 	-- MINE
 	-- 'github/copilot.vim', -- Copilot
-	{
-		"nvim-neorg/neorg",
-		build = ":Neorg sync-parsers",
-		lazy = false, -- specify lazy = false because some lazy.nvim distributions set lazy = true by default
-		-- tag = "*",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("neorg").setup {
-				load = {
-					["core.defaults"] = {}, -- Loads default behaviour
-					["core.concealer"] = {}, -- Adds pretty icons to your documents
-					["core.dirman"] = { -- Manages Neorg workspaces
-						config = {
-							workspaces = {
-								notes = "~/notes",
-							},
-						},
-					},
-				},
-			}
-		end,
-	},
+	"stevearc/vim-arduino",
+	"prettier/vim-prettier",
+	-- {
+	-- 	"nvim-neorg/neorg",
+	-- 	-- build = ":Neorg sync-parsers",
+	-- 	lazy = false, -- specify lazy = false because some lazy.nvim distributions set lazy = true by default
+	-- 	-- tag = "*",
+	-- 	dependencies = { "nvim-lua/plenary.nvim", "vhyrro/luarocks.nvim" },
+	-- 	config = function()
+	-- 		require("neorg").setup {
+	-- 			load = {
+	-- 				["core.defaults"] = {}, -- Loads default behaviour
+	-- 				["core.concealer"] = {}, -- Adds pretty icons to your documents
+	-- 				["core.dirman"] = { -- Manages Neorg workspaces
+	-- 					config = {
+	-- 						workspaces = {
+	-- 							notes = "~/notes",
+	-- 						},
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		}
+	-- 	end,
+	-- },
 	{
 		"ellisonleao/carbon-now.nvim",
 		lazy = true,
@@ -644,7 +646,7 @@ local corePlugins = {
 		'nvim-treesitter/nvim-treesitter',
 		dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
 		build = ':TSUpdate',
-		commit = '33eb472b459f1d2bf49e16154726743ab3ca1c6d',
+		-- commit = '33eb472b459f1d2bf49e16154726743ab3ca1c6d',
 		config = function() end
 		-- Locking this to this commit to keep Flutter / Dart from lagging until this issue is fixed:
 		-- https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
@@ -743,7 +745,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('telescope').setup {
 	defaults = {
 		path_display = { "truncate" },
-		file_ignore_patterns = { "node_modules" },
+		file_ignore_patterns = { "node_modules", "build" },
 		mappings = { i = { ['<C-u>'] = false, ['<C-d>'] = false } }
 	},
 	pickers = {
@@ -796,10 +798,10 @@ vim.defer_fn(function()
 		-- Add languages to be installed here that you want installed for treesitter
 
 		-- --  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
-		-- ensure_installed = {
-		-- 	'glimmer', 'javascript', 'lua', 'python', 'rust', 'tsx',
-		-- 	'typescript', 'vim', 'vimdoc'
-		-- },
+		ensure_installed = {
+			'cmake', 'glimmer', 'javascript', 'lua', 'python', 'rust', 'tsx',
+			'typescript', 'vim', 'vimdoc'
+		},
 
 		-- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
 		-- auto_install = false,
@@ -1133,6 +1135,9 @@ end
 --   highlight NormalFloat guibg=none
 -- ]])
 
+require("notify").setup({
+  background_colour = "#000000",
+})
 -- Force transparent background only if we're in linux
 if vim.fn.has('unix') == 1 then
 	vim.cmd([[
