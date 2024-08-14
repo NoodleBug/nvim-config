@@ -65,34 +65,80 @@ local corePlugins = {
 
 	-- MINE
 	-- 'github/copilot.vim', -- Copilot
-	{
-		"nvim-neorg/neorg",
-		build = ":Neorg sync-parsers",
-		lazy = false, -- specify lazy = false because some lazy.nvim distributions set lazy = true by default
-		-- tag = "*",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("neorg").setup {
-				load = {
-					["core.defaults"] = {}, -- Loads default behaviour
-					["core.concealer"] = {}, -- Adds pretty icons to your documents
-					["core.dirman"] = { -- Manages Neorg workspaces
-						config = {
-							workspaces = {
-								notes = "~/notes",
-							},
-						},
-					},
-				},
-			}
-		end,
-	},
+	-- {
+	-- 	"MunifTanjim/prettier.nvim",
+	-- 	dependencies = {
+	-- 		"neovim/nvim-lspconfig",
+	-- 		"jose-elias-alvarez/null-ls.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		local null_ls = require("null-ls")
+	--
+	-- 		local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
+	-- 		local event = "BufWritePre" -- or "BufWritePost"
+	-- 		local async = event == "BufWritePost"
+	--
+	-- 		null_ls.setup({
+	-- 			on_attach = function(client, bufnr)
+	-- 				if client.supports_method("textDocument/formatting") then
+	-- 					vim.keymap.set("n", "<Leader>f", function()
+	-- 						vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+	-- 						end, { buffer = bufnr, desc = "[lsp] format" })
+	--
+	-- 					-- format on save
+	-- 					vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+	-- 					vim.api.nvim_create_autocmd(event, {
+	-- 						buffer = bufnr,
+	-- 						group = group,
+	-- 						callback = function()
+	-- 							vim.lsp.buf.format({ bufnr = bufnr, async = async })
+	-- 						end,
+	-- 						desc = "[lsp] format on save",
+	-- 					})
+	-- 				end
+	--
+	-- 				if client.supports_method("textDocument/rangeFormatting") then
+	-- 					vim.keymap.set("x", "<Leader>f", function()
+	-- 						vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+	-- 						end, { buffer = bufnr, desc = "[lsp] format" })
+	-- 				end
+	-- 			end,
+	-- 		})
+	-- 	end,
+	-- },
+	'prettier/vim-prettier',
+	-- {
+	-- 	"nvim-neorg/neorg",
+	-- 	-- build = ":Neorg sync-parsers",
+	-- 	lazy = false, -- specify lazy = false because some lazy.nvim distributions set lazy = true by default
+	-- 	-- tag = "*",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"vhyrro/luarocks.nvim",
+	-- 		"nvim-neorg/lua-utils.nvim",
+	-- 	},
+	-- 	config = function()
+	-- 		require("neorg").setup {
+	-- 			load = {
+	-- 				["core.defaults"] = {}, -- Loads default behaviour
+	-- 				["core.concealer"] = {}, -- Adds pretty icons to your documents
+	-- 				["core.dirman"] = { -- Manages Neorg workspaces
+	-- 					config = {
+	-- 						workspaces = {
+	-- 							notes = "~/notes",
+	-- 						},
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		}
+	-- 	end,
+	-- },
 	{
 		"ellisonleao/carbon-now.nvim",
 		lazy = true,
 		cmd = "CarbonNow",
 		config = function()
-			require("carbon-now").setup({ 
+			require("carbon-now").setup({
 				options = {
 					title = "",
 					titlebar = "",
@@ -140,7 +186,7 @@ local corePlugins = {
 		config = function()
 			require('telescope').load_extension('changed_files')
 		end
-	}, 
+	},
 	{
 		"olrtg/nvim-emmet",
 		config = function()
@@ -162,34 +208,119 @@ local corePlugins = {
 	{
 		"mfussenegger/nvim-dap",
 		config = function()
-			-- require("dapui").toggle_breakpoint() on <leader>cb
+			local dap = require('dap')
+
+			-- -- require("dapui").toggle_breakpoint() on <leader>cb
 			vim.cmd.nmap('<leader>cb', '<cmd>lua require"dap".toggle_breakpoint()<CR>')
-
-			-- require("dapui").step_into() on F10
+			--
+			-- -- require("dapui").step_into() on F10
 			vim.cmd.nmap('<F10>', '<cmd>lua require"dap".step_into()<CR>')
-
-			-- require("dapui").step_over() on F11
+			--
+			-- -- require("dapui").step_over() on F11
 			vim.cmd.nmap('<F11>', '<cmd>lua require"dap".step_over()<CR>')
-
-			-- require("dapui").continue() on F5
+			--
+			-- -- require("dapui").continue() on F5
 			vim.cmd.nmap('<F5>', '<cmd>lua require"dap".continue()<CR>')
-
-			-- require("dapui").repl.toggle() on <leader>ci
+			--
+			-- -- require("dapui").repl.toggle() on <leader>ci
 			vim.cmd.nmap('<leader>ci', '<cmd>lua require"dap".repl.toggle()<CR>')
 
-			local dap = require('dap')
-			dap.configurations.javascript = {
+
+
+
+
+
+
+
+
+			vim.g.dotnet_build_project = function()
+				local default_path = vim.fn.getcwd() .. '/'
+				if vim.g['dotnet_last_proj_path'] ~= nil then
+					default_path = vim.g['dotnet_last_proj_path']
+				end
+				local path = vim.fn.input('Path to your *proj file', default_path, 'file')
+				vim.g['dotnet_last_proj_path'] = path
+				local cmd = 'dotnet build -c Debug ' .. path .. ' > /dev/null'
+				print('')
+				print('Cmd to execute: ' .. cmd)
+				local f = os.execute(cmd)
+				if f == 0 then
+					print('\nBuild: ✔️ ')
+				else
+					print('\nBuild: ❌ (code: ' .. f .. ')')
+				end
+			end
+
+			vim.g.dotnet_get_dll_path = function()
+				local request = function()
+					return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+				end
+
+				if vim.g['dotnet_last_dll_path'] == nil then
+					vim.g['dotnet_last_dll_path'] = request()
+				else
+					if vim.fn.confirm('Do you want to change the path to dll?\n' .. vim.g['dotnet_last_dll_path'], '&yes\n&no', 2) == 1 then
+						vim.g['dotnet_last_dll_path'] = request()
+					end
+				end
+
+				return vim.g['dotnet_last_dll_path']
+			end
+
+			local config = {
 				{
-					name = 'Launch NodeJS',
-					type = 'node',
-					request = 'launch',
-					program = '${file}',
-					cwd = vim.fn.getcwd(),
-					sourceMaps = true,
-					protocol = 'inspector',
-					console = 'integratedTerminal'
-				}
+					type = "coreclr",
+					name = "launch - netcoredbg",
+					request = "launch",
+					program = function()
+						if vim.fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
+							vim.g.dotnet_build_project()
+						end
+						return vim.g.dotnet_get_dll_path()
+					end,
+				},
 			}
+
+			dap.configurations.cs = config
+			dap.configurations.fsharp = config
+
+
+
+
+
+
+
+
+
+
+			-- dap.configurations.javascript = {
+			-- 	{
+			-- 		name = 'Launch NodeJS',
+			-- 		type = 'node',
+			-- 		request = 'launch',
+			-- 		program = '${file}',
+			-- 		cwd = vim.fn.getcwd(),
+			-- 		sourceMaps = true,
+			-- 		protocol = 'inspector',
+			-- 		console = 'integratedTerminal'
+			-- 	}
+			-- }
+			--
+			-- dap.adapters.coreclr = {
+			-- 	type = 'executable',
+			-- 	command = '/usr/bin/netcoredbg',
+			-- 	args = {'--interpreter=vscode'}
+			-- }
+			-- dap.configurations.cs = {
+			-- 	{
+			-- 		type = "coreclr",
+			-- 		name = "launch - netcoredbg",
+			-- 		request = "launch",
+			-- 		program = function()
+			-- 			return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+			-- 		end,
+			-- 	},
+			-- }
 		end
 	},
 	-- {
@@ -312,23 +443,59 @@ local corePlugins = {
 			--       \ }
 		end
 	}, 'michaeljsmith/vim-indent-object', -- Indent object
+	-- {
+	-- 	'ThePrimeagen/harpoon',
+	-- 	-- branch = 'harpoon2',
+	-- 	config = function()
+	-- 		require('harpoon').setup({
+	-- 			menu = { width = vim.api.nvim_win_get_width(0) - 16 }
+	-- 		})
+	-- 		require("telescope").load_extension('harpoon')
+	-- 	end
+	-- },
 	{
-		'ThePrimeagen/harpoon',
-		-- branch = 'harpoon2',
-		config = function()
-			require('harpoon').setup({
-				menu = { width = vim.api.nvim_win_get_width(0) - 16 }
-			})
-			require("telescope").load_extension('harpoon')
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function ()
+			local harpoon = require("harpoon")
+			vim.keymap.set("n", 'g``', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+			vim.keymap.set("n", 'm<Leader>', function() harpoon:list():add() end)
+			vim.keymap.set("n", 'g`1', function() harpoon:list():select(1) end)         -- Map g + `1 to go to harpoon mark 1
+			vim.keymap.set("n", 'g`2', function() harpoon:list():select(2) end)         -- Map g + `2 to go to harpoon mark 2
+			vim.keymap.set("n", 'g`3', function() harpoon:list():select(3) end)         -- Map g + `3 to go to harpoon mark 3
+			vim.keymap.set("n", 'g`4', function() harpoon:list():select(4) end)         -- Map g + `4 to go to harpoon mark 4
+			vim.keymap.set("n", 'g`5', function() harpoon:list():select(5) end)         -- Map g + `5 to go to harpoon mark 5
+			vim.keymap.set("n", 'g`6', function() harpoon:list():select(6) end)         -- Map g + `6 to go to harpoon mark 6
+			vim.keymap.set("n", 'g`7', function() harpoon:list():select(7) end)         -- Map g + `7 to go to harpoon mark 7
+			vim.keymap.set("n", 'g`8', function() harpoon:list():select(8) end)         -- Map g + `8 to go to harpoon mark 8
+			vim.keymap.set("n", 'g`9', function() harpoon:list():select(9) end)         -- Map g + `9 to go to harpoon mark 9
+			vim.keymap.set("n", 'g`0', function() harpoon:list():select(10) end)        -- Map g + `0 to go to harpoon mark 10
+			vim.keymap.set("n", "m<leader>", function() harpoon:list():add() end)
 		end
 	},
 	{
 		'jbyuki/instant.nvim',
 		config = function() vim.g.instant_username = 'noodlebug' end
 	},
+	-- {
+	-- 	'ggandor/leap.nvim', -- Jump to any line in a file with labels
+	-- 	config = function() require('leap').add_default_mappings() end
+	-- },
 	{
-		'ggandor/leap.nvim', -- Jump to any line in a file with labels
-		config = function() require('leap').add_default_mappings() end
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		---@type Flash.Config
+		opts = {},
+		-- stylua: ignore
+		keys = {
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			{ "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			-- { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+			{ "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+			{ "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+		},
+
 	},
 	{
 		'simrat39/symbols-outline.nvim', -- Outline symbols
@@ -644,7 +811,7 @@ local corePlugins = {
 		'nvim-treesitter/nvim-treesitter',
 		dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
 		build = ':TSUpdate',
-		commit = '33eb472b459f1d2bf49e16154726743ab3ca1c6d',
+		-- commit = '33eb472b459f1d2bf49e16154726743ab3ca1c6d',
 		config = function() end
 		-- Locking this to this commit to keep Flutter / Dart from lagging until this issue is fixed:
 		-- https://github.com/nvim-treesitter/nvim-treesitter/issues/4945
@@ -743,7 +910,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('telescope').setup {
 	defaults = {
 		path_display = { "truncate" },
-		file_ignore_patterns = { "node_modules" },
+		file_ignore_patterns = { "node_modules", "build/static" },
 		mappings = { i = { ['<C-u>'] = false, ['<C-d>'] = false } }
 	},
 	pickers = {
@@ -1061,18 +1228,19 @@ vim.cmd.nnoremap('<leader>L', ':LazyGit<CR>')                             -- Ope
 vim.cmd.nmap('<M-J>', '`o<Esc>``')                                        -- Insert new line below current line
 vim.cmd.nmap('<M-K>', '`O<Esc>``')                                        -- Insert new line above current line
 vim.cmd.tnoremap('<C-h>', '<C-\\><C-n>')                                  -- Exit terminal mode with control + h
-vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')  -- Map m + space to add mark to harpoon
-vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>') -- Map g + `` to toggle harpoon menu')
-vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')         -- Map g + `1 to go to harpoon mark 1
-vim.cmd.nmap('g`2', ':lua require("harpoon.ui").nav_file(2)<CR>')         -- Map g + `2 to go to harpoon mark 2
-vim.cmd.nmap('g`3', ':lua require("harpoon.ui").nav_file(3)<CR>')         -- Map g + `3 to go to harpoon mark 3
-vim.cmd.nmap('g`4', ':lua require("harpoon.ui").nav_file(4)<CR>')         -- Map g + `4 to go to harpoon mark 4
-vim.cmd.nmap('g`5', ':lua require("harpoon.ui").nav_file(5)<CR>')         -- Map g + `5 to go to harpoon mark 5
-vim.cmd.nmap('g`6', ':lua require("harpoon.ui").nav_file(6)<CR>')         -- Map g + `6 to go to harpoon mark 6
-vim.cmd.nmap('g`7', ':lua require("harpoon.ui").nav_file(7)<CR>')         -- Map g + `7 to go to harpoon mark 7
-vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')         -- Map g + `8 to go to harpoon mark 8
-vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')         -- Map g + `9 to go to harpoon mark 9
-vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')        -- Map g + `0 to go to harpoon mark 10
+-- vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')  -- Map m + space to add mark to harpoon
+-- vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>') -- Map g + `` to toggle harpoon menu')
+-- vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')         -- Map g + `1 to go to harpoon mark 1
+-- vim.cmd.nmap('g`2', ':lua require("harpoon.ui").nav_file(2)<CR>')         -- Map g + `2 to go to harpoon mark 2
+-- vim.cmd.nmap('g`3', ':lua require("harpoon.ui").nav_file(3)<CR>')         -- Map g + `3 to go to harpoon mark 3
+-- vim.cmd.nmap('g`4', ':lua require("harpoon.ui").nav_file(4)<CR>')         -- Map g + `4 to go to harpoon mark 4
+-- vim.cmd.nmap('g`5', ':lua require("harpoon.ui").nav_file(5)<CR>')         -- Map g + `5 to go to harpoon mark 5
+-- vim.cmd.nmap('g`6', ':lua require("harpoon.ui").nav_file(6)<CR>')         -- Map g + `6 to go to harpoon mark 6
+-- vim.cmd.nmap('g`7', ':lua require("harpoon.ui").nav_file(7)<CR>')         -- Map g + `7 to go to harpoon mark 7
+-- vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')         -- Map g + `8 to go to harpoon mark 8
+-- vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')         -- Map g + `9 to go to harpoon mark 9
+-- vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')        -- Map g + `0 to go to harpoon mark 10
+
 -- Customize nightfox theme
 -- require('nightfox').setup({
 -- 	-- Comment support for jsx / tsx
