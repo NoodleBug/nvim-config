@@ -94,7 +94,7 @@ local corePlugins = {
 		lazy = true,
 		cmd = "CarbonNow",
 		config = function()
-			require("carbon-now").setup({ 
+			require("carbon-now").setup({
 				options = {
 					title = "",
 					titlebar = "",
@@ -142,7 +142,7 @@ local corePlugins = {
 		config = function()
 			require('telescope').load_extension('changed_files')
 		end
-	}, 
+	},
 	{
 		"olrtg/nvim-emmet",
 		config = function()
@@ -246,7 +246,7 @@ local corePlugins = {
 
 
 
-			
+
 
 
 			-- dap.configurations.javascript = {
@@ -399,23 +399,59 @@ local corePlugins = {
 			--       \ }
 		end
 	}, 'michaeljsmith/vim-indent-object', -- Indent object
+	-- {
+	-- 	'ThePrimeagen/harpoon',
+	-- 	-- branch = 'harpoon2',
+	-- 	config = function()
+	-- 		require('harpoon').setup({
+	-- 			menu = { width = vim.api.nvim_win_get_width(0) - 16 }
+	-- 		})
+	-- 		require("telescope").load_extension('harpoon')
+	-- 	end
+	-- },
 	{
-		'ThePrimeagen/harpoon',
-		-- branch = 'harpoon2',
-		config = function()
-			require('harpoon').setup({
-				menu = { width = vim.api.nvim_win_get_width(0) - 16 }
-			})
-			require("telescope").load_extension('harpoon')
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function ()
+			local harpoon = require("harpoon")
+			vim.keymap.set("n", 'g``', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+			vim.keymap.set("n", 'm<Leader>', function() harpoon:list():add() end)
+			vim.keymap.set("n", 'g`1', function() harpoon:list():select(1) end)         -- Map g + `1 to go to harpoon mark 1
+			vim.keymap.set("n", 'g`2', function() harpoon:list():select(2) end)         -- Map g + `2 to go to harpoon mark 2
+			vim.keymap.set("n", 'g`3', function() harpoon:list():select(3) end)         -- Map g + `3 to go to harpoon mark 3
+			vim.keymap.set("n", 'g`4', function() harpoon:list():select(4) end)         -- Map g + `4 to go to harpoon mark 4
+			vim.keymap.set("n", 'g`5', function() harpoon:list():select(5) end)         -- Map g + `5 to go to harpoon mark 5
+			vim.keymap.set("n", 'g`6', function() harpoon:list():select(6) end)         -- Map g + `6 to go to harpoon mark 6
+			vim.keymap.set("n", 'g`7', function() harpoon:list():select(7) end)         -- Map g + `7 to go to harpoon mark 7
+			vim.keymap.set("n", 'g`8', function() harpoon:list():select(8) end)         -- Map g + `8 to go to harpoon mark 8
+			vim.keymap.set("n", 'g`9', function() harpoon:list():select(9) end)         -- Map g + `9 to go to harpoon mark 9
+			vim.keymap.set("n", 'g`0', function() harpoon:list():select(10) end)        -- Map g + `0 to go to harpoon mark 10
+			vim.keymap.set("n", "m<leader>", function() harpoon:list():add() end)
 		end
 	},
 	{
 		'jbyuki/instant.nvim',
 		config = function() vim.g.instant_username = 'noodlebug' end
 	},
+	-- {
+	-- 	'ggandor/leap.nvim', -- Jump to any line in a file with labels
+	-- 	config = function() require('leap').add_default_mappings() end
+	-- },
 	{
-		'ggandor/leap.nvim', -- Jump to any line in a file with labels
-		config = function() require('leap').add_default_mappings() end
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		---@type Flash.Config
+		opts = {},
+		-- stylua: ignore
+		keys = {
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			{ "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			-- { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+			{ "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+			{ "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+		},
+
 	},
 	{
 		'simrat39/symbols-outline.nvim', -- Outline symbols
@@ -830,7 +866,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('telescope').setup {
 	defaults = {
 		path_display = { "truncate" },
-		file_ignore_patterns = { "node_modules", "build" },
+		file_ignore_patterns = { "node_modules", "build/static" },
 		mappings = { i = { ['<C-u>'] = false, ['<C-d>'] = false } }
 	},
 	pickers = {
@@ -1148,18 +1184,19 @@ vim.cmd.nnoremap('<leader>L', ':LazyGit<CR>')                             -- Ope
 vim.cmd.nmap('<M-J>', '`o<Esc>``')                                        -- Insert new line below current line
 vim.cmd.nmap('<M-K>', '`O<Esc>``')                                        -- Insert new line above current line
 vim.cmd.tnoremap('<C-h>', '<C-\\><C-n>')                                  -- Exit terminal mode with control + h
-vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')  -- Map m + space to add mark to harpoon
-vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>') -- Map g + `` to toggle harpoon menu')
-vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')         -- Map g + `1 to go to harpoon mark 1
-vim.cmd.nmap('g`2', ':lua require("harpoon.ui").nav_file(2)<CR>')         -- Map g + `2 to go to harpoon mark 2
-vim.cmd.nmap('g`3', ':lua require("harpoon.ui").nav_file(3)<CR>')         -- Map g + `3 to go to harpoon mark 3
-vim.cmd.nmap('g`4', ':lua require("harpoon.ui").nav_file(4)<CR>')         -- Map g + `4 to go to harpoon mark 4
-vim.cmd.nmap('g`5', ':lua require("harpoon.ui").nav_file(5)<CR>')         -- Map g + `5 to go to harpoon mark 5
-vim.cmd.nmap('g`6', ':lua require("harpoon.ui").nav_file(6)<CR>')         -- Map g + `6 to go to harpoon mark 6
-vim.cmd.nmap('g`7', ':lua require("harpoon.ui").nav_file(7)<CR>')         -- Map g + `7 to go to harpoon mark 7
-vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')         -- Map g + `8 to go to harpoon mark 8
-vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')         -- Map g + `9 to go to harpoon mark 9
-vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')        -- Map g + `0 to go to harpoon mark 10
+-- vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')  -- Map m + space to add mark to harpoon
+-- vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>') -- Map g + `` to toggle harpoon menu')
+-- vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')         -- Map g + `1 to go to harpoon mark 1
+-- vim.cmd.nmap('g`2', ':lua require("harpoon.ui").nav_file(2)<CR>')         -- Map g + `2 to go to harpoon mark 2
+-- vim.cmd.nmap('g`3', ':lua require("harpoon.ui").nav_file(3)<CR>')         -- Map g + `3 to go to harpoon mark 3
+-- vim.cmd.nmap('g`4', ':lua require("harpoon.ui").nav_file(4)<CR>')         -- Map g + `4 to go to harpoon mark 4
+-- vim.cmd.nmap('g`5', ':lua require("harpoon.ui").nav_file(5)<CR>')         -- Map g + `5 to go to harpoon mark 5
+-- vim.cmd.nmap('g`6', ':lua require("harpoon.ui").nav_file(6)<CR>')         -- Map g + `6 to go to harpoon mark 6
+-- vim.cmd.nmap('g`7', ':lua require("harpoon.ui").nav_file(7)<CR>')         -- Map g + `7 to go to harpoon mark 7
+-- vim.cmd.nmap('g`8', ':lua require("harpoon.ui").nav_file(8)<CR>')         -- Map g + `8 to go to harpoon mark 8
+-- vim.cmd.nmap('g`9', ':lua require("harpoon.ui").nav_file(9)<CR>')         -- Map g + `9 to go to harpoon mark 9
+-- vim.cmd.nmap('g`0', ':lua require("harpoon.ui").nav_file(10)<CR>')        -- Map g + `0 to go to harpoon mark 10
+
 -- Customize nightfox theme
 -- require('nightfox').setup({
 -- 	-- Comment support for jsx / tsx
