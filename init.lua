@@ -89,6 +89,8 @@ local corePlugins = {
 			}
 		end,
 	},
+	-- {"@vue/language-server"},
+	-- {"@vue/typescript-plugin"},
 	{
 		"ellisonleao/carbon-now.nvim",
 		lazy = true,
@@ -162,123 +164,211 @@ local corePlugins = {
 		end
 	},
 	{
-		"mfussenegger/nvim-dap",
+		'mfussenegger/nvim-dap',
 		config = function()
 			local dap = require('dap')
+			dap.adapters.coreclr = {
+				type = 'executable',
+				command = '/usr/bin/netcoredbg',
+				args = { '--interpreter=vscode' },
+			}
 
-			-- -- require("dapui").toggle_breakpoint() on <leader>cb
-			vim.cmd.nmap('<leader>cb', '<cmd>lua require"dap".toggle_breakpoint()<CR>')
-			--
-			-- -- require("dapui").step_into() on F10
-			vim.cmd.nmap('<F10>', '<cmd>lua require"dap".step_into()<CR>')
-			--
-			-- -- require("dapui").step_over() on F11
-			vim.cmd.nmap('<F11>', '<cmd>lua require"dap".step_over()<CR>')
-			--
-			-- -- require("dapui").continue() on F5
-			vim.cmd.nmap('<F5>', '<cmd>lua require"dap".continue()<CR>')
-			--
-			-- -- require("dapui").repl.toggle() on <leader>ci
-			vim.cmd.nmap('<leader>ci', '<cmd>lua require"dap".repl.toggle()<CR>')
-
-
-
-
-
-
-
-
-
-			vim.g.dotnet_build_project = function()
-				local default_path = vim.fn.getcwd() .. '/'
-				if vim.g['dotnet_last_proj_path'] ~= nil then
-					default_path = vim.g['dotnet_last_proj_path']
-				end
-				local path = vim.fn.input('Path to your *proj file', default_path, 'file')
-				vim.g['dotnet_last_proj_path'] = path
-				local cmd = 'dotnet build -c Debug ' .. path .. ' > /dev/null'
-				print('')
-				print('Cmd to execute: ' .. cmd)
-				local f = os.execute(cmd)
-				if f == 0 then
-					print('\nBuild: ✔️ ')
-				else
-					print('\nBuild: ❌ (code: ' .. f .. ')')
-				end
-			end
-
-			vim.g.dotnet_get_dll_path = function()
-				local request = function()
-					return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
-				end
-
-				if vim.g['dotnet_last_dll_path'] == nil then
-					vim.g['dotnet_last_dll_path'] = request()
-				else
-					if vim.fn.confirm('Do you want to change the path to dll?\n' .. vim.g['dotnet_last_dll_path'], '&yes\n&no', 2) == 1 then
-						vim.g['dotnet_last_dll_path'] = request()
-					end
-				end
-
-				return vim.g['dotnet_last_dll_path']
-			end
-
-			local config = {
+			dap.configurations.cs = {
 				{
-					type = "coreclr",
-					name = "launch - netcoredbg",
-					request = "launch",
+					type = 'coreclr',
+					name = 'Launch - netcoredbg',
+					request = 'launch',
 					program = function()
-						if vim.fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
-							vim.g.dotnet_build_project()
-						end
-						return vim.g.dotnet_get_dll_path()
+						return vim.fn.input('Path to DLL: ', vim.fn.getcwd() .. '/bin/Debug/', 'file')
 					end,
 				},
 			}
+			dap.configurations.cs = {
+				{
+					type = 'coreclr',
+					name = 'Attach to process - netcoredbg',
+					request = 'attach',
+					processId = require('dap.utils').pick_process,
+				},
+			}
 
-			dap.configurations.cs = config
-			dap.configurations.fsharp = config
-
-
-
-
-
-
-
-
-
-
-			-- dap.configurations.javascript = {
-			-- 	{
-			-- 		name = 'Launch NodeJS',
-			-- 		type = 'node',
-			-- 		request = 'launch',
-			-- 		program = '${file}',
-			-- 		cwd = vim.fn.getcwd(),
-			-- 		sourceMaps = true,
-			-- 		protocol = 'inspector',
-			-- 		console = 'integratedTerminal'
-			-- 	}
-			-- }
-			--
-			-- dap.adapters.coreclr = {
-			-- 	type = 'executable',
-			-- 	command = '/usr/bin/netcoredbg',
-			-- 	args = {'--interpreter=vscode'}
-			-- }
-			-- dap.configurations.cs = {
-			-- 	{
-			-- 		type = "coreclr",
-			-- 		name = "launch - netcoredbg",
-			-- 		request = "launch",
-			-- 		program = function()
-			-- 			return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '/bin/Debug/', 'file')
-			-- 		end,
-			-- 	},
-			-- }
+			vim.api.nvim_set_keymap('n', '<F5>', "<Cmd>lua require'dap'.continue()<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<F10>', "<Cmd>lua require'dap'.step_over()<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<F11>', "<Cmd>lua require'dap'.step_into()<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<F12>', "<Cmd>lua require'dap'.step_out()<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>b', "<Cmd>lua require'dap'.toggle_breakpoint()<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>B', "<Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>lp', "<Cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>dr', "<Cmd>lua require'dap'.repl.open()<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>dl', "<Cmd>lua require'dap'.run_last()<CR>", { noremap = true, silent = true })
 		end
 	},
+	{
+		"pmizio/typescript-tools.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		opts = {},
+		config = function()
+			require("typescript-tools").setup {
+				volar = {
+					init_options = {
+						vue = {
+							hybridMode = true,
+						},
+					},
+				},
+				filetypes = {
+					"vue",
+				},
+				settings = {
+					tsserver_file_preferences = {
+						"vue",
+					},
+					single_file_support = false,
+					tsserver_plugins = {
+						"@styled/typescript-styled-plugin",
+						"@vue/language-server",
+						"@vue/typescript-plugin",
+					},
+				},
+			}
+		end
+	},
+	{
+		'rcarriga/nvim-dap-ui',
+		config = function()
+			local dap, dapui = require('dap'), require('dapui')
+
+			dapui.setup()
+
+			dap.listeners.after.event_initialized['dapui_config'] = function()
+				dapui.open()
+			end
+			dap.listeners.before.event_terminated['dapui_config'] = function()
+				dapui.close()
+			end
+			dap.listeners.before.event_exited['dapui_config'] = function()
+				dapui.close()
+			end
+		end
+	},
+	-- {
+	-- 	"mfussenegger/nvim-dap",
+	-- 	config = function()
+	-- 		local dap = require('dap')
+	--
+	-- 		-- -- require("dapui").toggle_breakpoint() on <leader>cb
+	-- 		vim.cmd.nmap('<leader>cb', '<cmd>lua require"dap".toggle_breakpoint()<CR>')
+	-- 		--
+	-- 		-- -- require("dapui").step_into() on F10
+	-- 		vim.cmd.nmap('<F10>', '<cmd>lua require"dap".step_into()<CR>')
+	-- 		--
+	-- 		-- -- require("dapui").step_over() on F11
+	-- 		vim.cmd.nmap('<F11>', '<cmd>lua require"dap".step_over()<CR>')
+	-- 		--
+	-- 		-- -- require("dapui").continue() on F5
+	-- 		vim.cmd.nmap('<F5>', '<cmd>lua require"dap".continue()<CR>')
+	-- 		--
+	-- 		-- -- require("dapui").repl.toggle() on <leader>ci
+	-- 		vim.cmd.nmap('<leader>ci', '<cmd>lua require"dap".repl.toggle()<CR>')
+	--
+	--
+	--
+	--
+	--
+	--
+	--
+	--
+	--
+	-- 		vim.g.dotnet_build_project = function()
+	-- 			local default_path = vim.fn.getcwd() .. '/'
+	-- 			if vim.g['dotnet_last_proj_path'] ~= nil then
+	-- 				default_path = vim.g['dotnet_last_proj_path']
+	-- 			end
+	-- 			local path = vim.fn.input('Path to your *proj file', default_path, 'file')
+	-- 			vim.g['dotnet_last_proj_path'] = path
+	-- 			local cmd = 'dotnet build -c Debug ' .. path .. ' > /dev/null'
+	-- 			print('')
+	-- 			print('Cmd to execute: ' .. cmd)
+	-- 			local f = os.execute(cmd)
+	-- 			if f == 0 then
+	-- 				print('\nBuild: ✔️ ')
+	-- 			else
+	-- 				print('\nBuild: ❌ (code: ' .. f .. ')')
+	-- 			end
+	-- 		end
+	--
+	-- 		vim.g.dotnet_get_dll_path = function()
+	-- 			local request = function()
+	-- 				return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+	-- 			end
+	--
+	-- 			if vim.g['dotnet_last_dll_path'] == nil then
+	-- 				vim.g['dotnet_last_dll_path'] = request()
+	-- 			else
+	-- 				if vim.fn.confirm('Do you want to change the path to dll?\n' .. vim.g['dotnet_last_dll_path'], '&yes\n&no', 2) == 1 then
+	-- 					vim.g['dotnet_last_dll_path'] = request()
+	-- 				end
+	-- 			end
+	--
+	-- 			return vim.g['dotnet_last_dll_path']
+	-- 		end
+	--
+	-- 		local config = {
+	-- 			{
+	-- 				type = "coreclr",
+	-- 				name = "launch - netcoredbg",
+	-- 				request = "launch",
+	-- 				program = function()
+	-- 					if vim.fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
+	-- 						vim.g.dotnet_build_project()
+	-- 					end
+	-- 					return vim.g.dotnet_get_dll_path()
+	-- 				end,
+	-- 			},
+	-- 		}
+	--
+	-- 		dap.configurations.cs = config
+	-- 		dap.configurations.fsharp = config
+	--
+	--
+	--
+	--
+	--
+	--
+	--
+	--
+	--
+	--
+	-- 		-- dap.configurations.javascript = {
+	-- 		-- 	{
+	-- 		-- 		name = 'Launch NodeJS',
+	-- 		-- 		type = 'node',
+	-- 		-- 		request = 'launch',
+	-- 		-- 		program = '${file}',
+	-- 		-- 		cwd = vim.fn.getcwd(),
+	-- 		-- 		sourceMaps = true,
+	-- 		-- 		protocol = 'inspector',
+	-- 		-- 		console = 'integratedTerminal'
+	-- 		-- 	}
+	-- 		-- }
+	-- 		--
+	-- 		dap.adapters.coreclr = {
+	-- 			type = 'executable',
+	-- 			command = '/usr/bin/netcoredbg',
+	-- 			args = {'--interpreter=vscode'}
+	-- 		}
+	-- 		-- dap.configurations.cs = {
+	-- 		-- 	{
+	-- 		-- 		type = "coreclr",
+	-- 		-- 		name = "launch - netcoredbg",
+	-- 		-- 		request = "launch",
+	-- 		-- 		program = function()
+	-- 		-- 			return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+	-- 		-- 		end,
+	-- 		-- 	},
+	-- 		-- }
+	-- 	end
+	-- },
 	-- {
 	-- 	"rcarriga/nvim-dap-ui",
 	-- 	dependencies = { "mfussenegger/nvim-dap" },
@@ -357,7 +447,7 @@ local corePlugins = {
 	--         }
 	--     end
 	-- },
-	{ "evanleck/vim-svelte" },
+	-- { "evanleck/vim-svelte" },
 	-- {
 	-- 	"Himujjal/tree-sitter-svelte",
 	-- 	config = function()
@@ -485,7 +575,7 @@ local corePlugins = {
 			require('toggleterm').setup {
 				open_mapping = [[<C-\>]],
 				-- shell = 'powershell.exe',
-				direction = 'vertical',
+				direction = 'float',
 				size = 100
 			}
 			vim.cmd.nnoremap('<M-\\>', ':ToggleTerm direction=float<CR>')
@@ -1052,15 +1142,14 @@ local on_attach = function(_, bufnr)
 		})
 end
 
--- document existing key chains
-require('which-key').register({
-	['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-	['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-	['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-	['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
-	['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-	['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-	['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' }
+require('which-key').add({
+	{ "<leader>c", desc = "[C]ode" },
+	{ "<leader>d", desc = "[D]ocument" },
+	{ "<leader>g", desc = "[G]it" },
+	{ "<leader>h", desc = "More git" },
+	{ "<leader>r", desc = "[R]ename" },
+	{ "<leader>s", desc = "[S]earch" },
+	{ "<leader>w", desc = "[W]orkspace" }
 })
 
 -- Enable the following language servers
