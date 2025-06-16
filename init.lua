@@ -128,7 +128,7 @@ local corePlugins = {
 		-- end,
 		config = function()
 			-- require("dbee").install()
-			require("dbee").setup(--[[optional config]])
+			require("dbee").setup( --[[optional config]])
 		end
 	},
 	{
@@ -163,10 +163,36 @@ local corePlugins = {
 			map("n", "<A-l>", [[<cmd>lua require('tmux').move_right()<cr>]], {})
 		end
 	},
+	-- lua require('dap-go').setup()
+	"leoluz/nvim-dap-go",
 	{
 		'mfussenegger/nvim-dap',
 		config = function()
 			local dap = require('dap')
+
+			-- golang support
+			require('dap-go').setup {
+				dap_configurations = {
+					{
+						-- Must be "go" or it will be ignored by the plugin
+						type = "go",
+						name = "Attach remote",
+						mode = "remote",
+						request = "attach",
+						-- tell which host and port to connect to
+						connect = {
+							host = "127.0.0.1",
+							port = "2345"
+						}
+					}
+				},
+				delve = {
+					path = "dlv",
+					-- port = "38697",
+					port = "2345"
+				}
+			}
+
 			dap.adapters.coreclr = {
 				type = 'executable',
 				command = '/usr/bin/netcoredbg',
@@ -192,15 +218,26 @@ local corePlugins = {
 				},
 			}
 
-			vim.api.nvim_set_keymap('n', '<F5>', "<Cmd>lua require'dap'.continue()<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<F10>', "<Cmd>lua require'dap'.step_over()<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<F11>', "<Cmd>lua require'dap'.step_into()<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<F12>', "<Cmd>lua require'dap'.step_out()<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<Leader>b', "<Cmd>lua require'dap'.toggle_breakpoint()<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<Leader>B', "<Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<Leader>lp', "<Cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<Leader>dr', "<Cmd>lua require'dap'.repl.open()<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<Leader>dl', "<Cmd>lua require'dap'.run_last()<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<F5>', "<Cmd>lua require'dap'.continue()<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<F10>', "<Cmd>lua require'dap'.step_over()<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<F11>', "<Cmd>lua require'dap'.step_into()<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<F12>', "<Cmd>lua require'dap'.step_out()<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>b', "<Cmd>lua require'dap'.toggle_breakpoint()<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>B',
+				"<Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>lp',
+				"<Cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>dr', "<Cmd>lua require'dap'.repl.open()<CR>",
+				{ noremap = true, silent = true })
+			vim.api.nvim_set_keymap('n', '<Leader>dl', "<Cmd>lua require'dap'.run_last()<CR>",
+				{ noremap = true, silent = true })
 		end
 	},
 	{
@@ -503,20 +540,13 @@ local corePlugins = {
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function ()
+		config = function()
 			local harpoon = require("harpoon")
 			vim.keymap.set("n", 'g``', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 			vim.keymap.set("n", 'm<Leader>', function() harpoon:list():add() end)
-			vim.keymap.set("n", 'g`1', function() harpoon:list():select(1) end)         -- Map g + `1 to go to harpoon mark 1
-			vim.keymap.set("n", 'g`2', function() harpoon:list():select(2) end)         -- Map g + `2 to go to harpoon mark 2
-			vim.keymap.set("n", 'g`3', function() harpoon:list():select(3) end)         -- Map g + `3 to go to harpoon mark 3
-			vim.keymap.set("n", 'g`4', function() harpoon:list():select(4) end)         -- Map g + `4 to go to harpoon mark 4
-			vim.keymap.set("n", 'g`5', function() harpoon:list():select(5) end)         -- Map g + `5 to go to harpoon mark 5
-			vim.keymap.set("n", 'g`6', function() harpoon:list():select(6) end)         -- Map g + `6 to go to harpoon mark 6
-			vim.keymap.set("n", 'g`7', function() harpoon:list():select(7) end)         -- Map g + `7 to go to harpoon mark 7
-			vim.keymap.set("n", 'g`8', function() harpoon:list():select(8) end)         -- Map g + `8 to go to harpoon mark 8
-			vim.keymap.set("n", 'g`9', function() harpoon:list():select(9) end)         -- Map g + `9 to go to harpoon mark 9
-			vim.keymap.set("n", 'g`0', function() harpoon:list():select(10) end)        -- Map g + `0 to go to harpoon mark 10
+			for i = 1, 9, 1 do
+				vim.keymap.set("n", 'g`' .. i, function() harpoon:list():select(i == 0 and 10 or i) end)
+			end
 			vim.keymap.set("n", "m<leader>", function() harpoon:list():add() end)
 		end
 	},
@@ -535,11 +565,11 @@ local corePlugins = {
 		opts = {},
 		-- stylua: ignore
 		keys = {
-			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-			{ "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			{ "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+			{ "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
 			-- { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-			{ "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-			{ "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+			{ "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+			{ "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
 		},
 
 	},
@@ -583,18 +613,18 @@ local corePlugins = {
 		end
 	},
 	{
-		'kdheepak/lazygit.nvim',                     -- Lazygit in a floating window
+		'kdheepak/lazygit.nvim',                      -- Lazygit in a floating window
 		config = function()
 			vim.g.lazygit_floating_window_winblend = 0 -- transparency of floating window
 			vim.g.lazygit_floating_window_scaling_factor = 0.9 -- scaling factor for floating window
 			vim.g.lazygit_floating_window_border_chars = {
 				'╭', '─', '╮', '│', '╯', '─', '╰', '│'
-			}                                   -- customize lazygit popup window border characters
+			}                                    -- customize lazygit popup window border characters
 			vim.g.lazygit_floating_window_use_plenary = 0 -- use plenary.nvim to manage floating window if available
-			vim.g.lazygit_use_neovim_remote = 1 -- fallback to 0 if neovim-remote is not installed
+			vim.g.lazygit_use_neovim_remote = 1  -- fallback to 0 if neovim-remote is not installed
 
 			vim.g.lazygit_use_custom_config_file_path = 0 -- config file path is evaluated if this value is 1
-			vim.g.lazygit_config_file_path = '' -- custom config file path
+			vim.g.lazygit_config_file_path = ''  -- custom config file path
 			-- OR
 			-- vim.g.lazygit_config_file_path = {} -- table of custom config file paths
 		end,
@@ -617,7 +647,7 @@ local corePlugins = {
 	},
 	{
 		"kylechui/nvim-surround", -- Modify surrounders ({""})
-		version = "*",     -- Use for stability; omit to use `main` branch for the latest features
+		version = "*",      -- Use for stability; omit to use `main` branch for the latest features
 		event = "VeryLazy",
 		config = function()
 			require("nvim-surround").setup({
@@ -775,18 +805,18 @@ local corePlugins = {
 				-- don't override the built-in and fugitive keymaps
 				local gs = package.loaded.gitsigns
 				vim.keymap.set({ 'n', 'v' }, ']c', function()
-				if vim.wo.diff then return ']c' end
+					if vim.wo.diff then return ']c' end
 					vim.schedule(function() gs.next_hunk() end)
 					return '<Ignore>'
-					end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+				end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
 				vim.keymap.set({ 'n', 'v' }, '[c', function()
-				if vim.wo.diff then return '[c' end
+					if vim.wo.diff then return '[c' end
 					vim.schedule(function() gs.prev_hunk() end)
 					return '<Ignore>'
-					end, {
-						expr = true,
-						buffer = bufnr,
-						desc = "Jump to previous hunk"
+				end, {
+					expr = true,
+					buffer = bufnr,
+					desc = "Jump to previous hunk"
 				})
 			end
 		}
@@ -960,6 +990,9 @@ require('telescope').setup {
 		mappings = { i = { ['<C-u>'] = false, ['<C-d>'] = false } }
 	},
 	pickers = {
+		find_files = {
+			show_hidden = true
+		},
 		live_grep = {
 			vimgrep_arguments = {
 				"rg", "--color=never", "--no-heading", "--with-filename",
@@ -1265,14 +1298,14 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 
 -- Custom commands / mappings
-vim.cmd.autocmd('BufNewFile,BufRead', '*', 'setlocal formatoptions=cr')   -- Don't auto insert as a comment when pressing O
-vim.cmd.autocmd('TermOpen', '*', 'setlocal nonumber norelativenumber')    -- No line numbers in terminal
-vim.cmd.command('EditConfig', ":execute 'e ' . stdpath('config')<CR>")    -- Edit config file
-vim.cmd.nnoremap('<leader>F', ':NERDTreeToggle<CR>')                      -- Open nerdtree file explorer
-vim.cmd.nnoremap('<leader>L', ':LazyGit<CR>')                             -- Open lazygit (git gui)
-vim.cmd.nmap('<M-J>', '`o<Esc>``')                                        -- Insert new line below current line
-vim.cmd.nmap('<M-K>', '`O<Esc>``')                                        -- Insert new line above current line
-vim.cmd.tnoremap('<C-h>', '<C-\\><C-n>')                                  -- Exit terminal mode with control + h
+vim.cmd.autocmd('BufNewFile,BufRead', '*', 'setlocal formatoptions=cr') -- Don't auto insert as a comment when pressing O
+vim.cmd.autocmd('TermOpen', '*', 'setlocal nonumber norelativenumber')  -- No line numbers in terminal
+vim.cmd.command('EditConfig', ":execute 'e ' . stdpath('config')<CR>")  -- Edit config file
+vim.cmd.nnoremap('<leader>F', ':NERDTreeToggle<CR>')                    -- Open nerdtree file explorer
+vim.cmd.nnoremap('<leader>L', ':LazyGit<CR>')                           -- Open lazygit (git gui)
+vim.cmd.nmap('<M-J>', '`o<Esc>``')                                      -- Insert new line below current line
+vim.cmd.nmap('<M-K>', '`O<Esc>``')                                      -- Insert new line above current line
+vim.cmd.tnoremap('<C-h>', '<C-\\><C-n>')                                -- Exit terminal mode with control + h
 -- vim.cmd.nmap('m<leader>', ':lua require("harpoon.mark").add_file()<CR>')  -- Map m + space to add mark to harpoon
 -- vim.cmd.nmap('g``', ':lua require("harpoon.ui").toggle_quick_menu()<CR>') -- Map g + `` to toggle harpoon menu')
 -- vim.cmd.nmap('g`1', ':lua require("harpoon.ui").nav_file(1)<CR>')         -- Map g + `1 to go to harpoon mark 1
@@ -1347,7 +1380,7 @@ end
 -- ]])
 
 require("notify").setup({
-  background_colour = "#000000",
+	background_colour = "#000000",
 })
 -- Force transparent background only if we're in linux
 if vim.fn.has('unix') == 1 then
